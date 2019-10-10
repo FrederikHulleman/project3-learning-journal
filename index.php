@@ -1,5 +1,6 @@
 <?php
-require('inc/connection.php');
+include('inc/connection.php');
+
 ?>
 
 <!DOCTYPE html>
