@@ -1,5 +1,5 @@
 <?php
-include('inc/connection.php');
+include('inc/functions.php');
 
 ?>
 
@@ -27,7 +27,23 @@ include('inc/connection.php');
         <section>
             <div class="container">
                 <div class="entry-list">
-                    <article>
+                  <?php
+                    foreach(get_entries() as $entry) {
+                      echo "<article>
+                              <h2><a href='detail.php?'>".$entry['title']."</a></h2>
+                              <time datetime='2016-01-31'>January 31, 2016</time>
+                              </article>";
+                    }
+                      /*
+                      `id`	INTEGER,
+                    	`title`	TEXT,
+                    	`date`	TEXT,
+                    	`time_spent`	INTEGER,
+                    	`learned`	BLOB,
+                    	`resources`	BLOB,
+                      */
+                  ?>
+                    <!-- <article>
                         <h2><a href="detail.html">The best day I’ve ever had</a></h2>
                         <time datetime="2016-01-31">January 31, 2016</time>
                     </article>
@@ -42,7 +58,7 @@ include('inc/connection.php');
                     <article>
                         <h2><a href="detail_4.html">Dude, where’s my car?</a></h2>
                         <time datetime="2016-01-31">January 31, 2016</time>
-                    </article>
+                    </article> -->
                 </div>
             </div>
         </section>
