@@ -1,3 +1,9 @@
+<?php
+if(isset($_GET['msg'])) {
+  $error_message = trim(filter_input(INPUT_GET,'msg',FILTER_SANITIZE_STRING));
+}
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -15,7 +21,7 @@
             <div class="container">
                 <div class="site-header">
                     <a class="logo" href="index.php"><i class="material-icons">library_books</i></a>
-                    <a class="button icon-right" href="new.php"><span>New Entry</span> <i class="material-icons">add</i></a>
+                    <a class="button icon-right" href="add_or_edit.php"><span>New Entry</span> <i class="material-icons">add</i></a>
                 </div>
             </div>
         </header>

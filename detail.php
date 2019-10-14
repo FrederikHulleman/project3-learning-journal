@@ -1,37 +1,48 @@
 <?php
 include('inc/functions.php');
+$id=$title=$date=$time_spent=$learned=$resources="";
 if(!empty($_GET['id'])) {
   $id = trim(filter_input(INPUT_GET,'id',FILTER_SANITIZE_NUMBER_INT));
-  $entry = get_entries($id)[0];
-  /*
-  `id`	INTEGER,
-  `title`	TEXT,
-  `date`	TEXT,
-  `time_spent`	INTEGER,
-  `learned`	BLOB,
-  `resources`	BLOB,
-  */
-  if(empty($entry)) {
-    header('location: index.php?msg=No+valid+journal');
+
+  if(!empty($id))
+  {
+    list($id,$title,$date,$time_spent,$learned,$resources) = get_entries($id);
   }
+}
+
+
+if(empty($id)) {
+  header('location: index.php?msg=No+journal+could+be+selected');
+  exit;
 }
 
 include('inc/header.php');
 ?>
 <div class="entry-list single">
     <article>
-        <h1><?php echo $entry['title']; ?></h1>
-        <time datetime="2016-01-31">January 31, 2016</time>
+        <h1><?php echo $title; ?></h1>
+        <time datetime="<?php echo $date; ?>"><?php echo date("F j, Y",strtotime($date)); ?></time>
         <div class="entry">
             <h3>Time Spent: </h3>
-            <p>15 Hours</p>
+            <p><?php echo $time_spent; ?></p>
         </div>
-        <div class="entry">
-            <h3>What I Learned:</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ut rhoncus felis, vel tincidunt neque.</p>
-            <p>Cras egestas ac ipsum in posuere. Fusce suscipit, libero id malesuada placerat, orci velit semper metus, quis pulvinar sem nunc vel augue. In ornare tempor metus, sit amet congue justo porta et. Etiam pretium, sapien non fermentum consequat, <a href="">dolor augue</a> gravida lacus, non accumsan. Vestibulum ut metus eleifend, malesuada nisl at, scelerisque sapien.</p>
-        </div>
-        <div class="entry">
+        <?php
+        if(!empty($learned)) {
+          echo "<div class='entry'>\n"
+              . "<h3>What I Learned:</h3>"
+              . "<p>".$learned."</p>"
+              . "</div>";
+        }
+        if(!empty($resources)) {
+          echo "<div class='entry'>\n"
+              . "<h3>Resources to Remember:</h3>"
+              . "<p>".$resources."</p>"
+              . "</div>";
+        }
+        ?>
+
+
+        <!-- <div class="entry">
             <h3>Resources to Remember:</h3>
             <ul>
                 <li><a href="">Lorem ipsum dolor sit amet</a></li>
@@ -39,13 +50,13 @@ include('inc/header.php');
                 <li>Nunc ut rhoncus felis, vel tincidunt neque</li>
                 <li><a href="">Ipsum dolor sit amet</a></li>
             </ul>
-        </div>
+        </div>-->
     </article>
 </div>
 
 </div> <!-- closing 'container' div tag from header.php  -->
 <div class="edit">
-    <p><a href="edit.php">Edit Entry</a></p>
+    <p><a href="add_or_edit.php?id=<?php echo $id; ?>">Edit Entry</a></p>
 </div>
 
 <?php
