@@ -1,8 +1,7 @@
 <?php
 include('inc/header.php');
 ?>
-        <section>
-            <div class="container">
+
                 <div class="new-entry">
                     <h2>New Entry</h2>
                     <form>
@@ -20,8 +19,7 @@ include('inc/header.php');
                         <a href="#" class="button button-secondary">Cancel</a>
                     </form>
                 </div>
-            </div>
-        </section>
+            </div> <!-- closing 'container' div tag from header.php  -->
 <?php
 include('inc/footer.php');
 ?>

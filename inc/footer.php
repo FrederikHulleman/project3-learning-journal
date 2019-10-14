@@ -1,3 +1,4 @@
+</section>
 <footer>
     <div>
         &copy; MyJournal
