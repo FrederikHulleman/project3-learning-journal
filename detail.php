@@ -8,7 +8,7 @@ if(isset($_POST['delete'])) {
     exit;
   }
   else {
-    header('location: detail.php?msg=Unable+to+Delete+Entry');
+    header('location: index.php?msg=Unable+to+Delete+Entry');
     exit;
   }
 

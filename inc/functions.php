@@ -55,9 +55,14 @@ function add_or_edit_entry($title,$date,$time_spent,$learned,$resources,$id = nu
 
   } catch (Exception $e) {
     echo "Bad query: " . $e->getMessage();
+    exit;
+  }
+  if($results->rowCount() > 0) {
+    return TRUE;
+  }
+  else {
     return FALSE;
   }
-  return TRUE;
 }
 
 function delete_entry($id) {
@@ -73,9 +78,14 @@ function delete_entry($id) {
 
   } catch (Exception $e) {
     echo "Bad query: " . $e->getMessage();
+    exit;
+  }
+  if($results->rowCount() > 0) {
+    return TRUE;
+  }
+  else {
     return FALSE;
   }
-  return TRUE;
 
 }
 
