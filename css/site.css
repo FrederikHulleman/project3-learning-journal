@@ -131,7 +131,6 @@ ul li a {
 }
 
 
-
 /* ==========================================================================
    Page Styles
    ========================================================================== */
@@ -225,16 +224,10 @@ input[type=submit] {
 	margin-right: 5px;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+.message  {
+	background-color:#ed5a5a;
+	border-radius:4px;
+	padding:1.5rem;
+	color:#fff;
+	text-align:center;
+}

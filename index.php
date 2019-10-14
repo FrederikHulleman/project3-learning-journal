@@ -1,37 +1,27 @@
 <?php
 include('inc/functions.php');
 
+if(isset($_GET['msg'])) {
+  $error_message = trim(filter_input(INPUT_GET,'msg',FILTER_SANITIZE_STRING));
+}
+
+
+include('inc/header.php');
 ?>
 
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>MyJournal</title>
-        <link href="https://fonts.googleapis.com/css?family=Cousine:400" rel="stylesheet" type="text/css">
-        <link href="https://fonts.googleapis.com/css?family=Work+Sans:600" rel="stylesheet" type="text/css">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/site.css">
-    </head>
-    <body>
-        <header>
-            <div class="container">
-                <div class="site-header">
-                    <a class="logo" href="index.html"><i class="material-icons">library_books</i></a>
-                    <a class="button icon-right" href="new.html"><span>New Entry</span> <i class="material-icons">add</i></a>
-                </div>
-            </div>
-        </header>
+
         <section>
             <div class="container">
+              <?php if(!empty($error_message)) {
+                echo "<p class='message'>$error_message</p>";
+              }
+               ?>
                 <div class="entry-list">
                   <?php
                     foreach(get_entries() as $entry) {
                       echo "<article>
-                              <h2><a href='detail.php?'>".$entry['title']."</a></h2>
-                              <time datetime='2016-01-31'>January 31, 2016</time>
+                              <h2><a href='detail.php?id=".$entry['id']."'>".$entry['title']."</a></h2>
+                              <time datetime='".$entry['date']."'>".date("F j, Y",strtotime($entry['date']))."</time>
                               </article>";
                     }
                       /*
@@ -43,29 +33,9 @@ include('inc/functions.php');
                     	`resources`	BLOB,
                       */
                   ?>
-                    <!-- <article>
-                        <h2><a href="detail.html">The best day I’ve ever had</a></h2>
-                        <time datetime="2016-01-31">January 31, 2016</time>
-                    </article>
-                    <article>
-                        <h2><a href="detail_2.html">The absolute worst day I’ve ever had</a></h2>
-                        <time datetime="2016-01-31">January 31, 2016</time>
-                    </article>
-                    <article>
-                        <h2><a href="detail_3.html">That time at the mall</a></h2>
-                        <time datetime="2016-01-31">January 31, 2016</time>
-                    </article>
-                    <article>
-                        <h2><a href="detail_4.html">Dude, where’s my car?</a></h2>
-                        <time datetime="2016-01-31">January 31, 2016</time>
-                    </article> -->
                 </div>
             </div>
         </section>
-        <footer>
-            <div>
-                &copy; MyJournal
-            </div>
-        </footer>
-    </body>
-</html>
+<?php
+include('inc/footer.php');
+?>
