@@ -1,6 +1,19 @@
 <?php
 include('inc/functions.php');
 $id=$title=$date=$time_spent=$learned=$resources="";
+
+if(isset($_POST['delete'])) {
+  if(delete_entry(filter_input(INPUT_POST,'delete',FILTER_SANITIZE_NUMBER_INT))) {
+    header('location: index.php?msg=Entry+Deleted');
+    exit;
+  }
+  else {
+    header('location: detail.php?msg=Unable+to+Delete+Entry');
+    exit;
+  }
+
+}
+
 if(!empty($_GET['id'])) {
   $id = trim(filter_input(INPUT_GET,'id',FILTER_SANITIZE_NUMBER_INT));
 
@@ -9,7 +22,6 @@ if(!empty($_GET['id'])) {
     list($id,$title,$date,$time_spent,$learned,$resources) = get_entries($id);
   }
 }
-
 
 if(empty($id)) {
   header('location: index.php?msg=No+journal+could+be+selected');
@@ -56,7 +68,12 @@ include('inc/header.php');
 
 </div> <!-- closing 'container' div tag from header.php  -->
 <div class="edit">
-    <p><a href="add_or_edit.php?id=<?php echo $id; ?>">Edit Entry</a></p>
+  <form method="post" action="detail.php" onsubmit="return confirm('Are you sure you want to delete this entry?');">
+  <input type="hidden" value="<?php echo $id;?>" name="delete">
+  <a class="button" href="add_or_edit.php?id=<?php echo $id;?>">Edit</a>
+  <input type="submit" class="button" value="Delete">
+  </form>
+    <!-- <p><a class="button" href="add_or_edit.php?id=<?php echo $id; ?>">Edit Entry</a></p> -->
 </div>
 
 <?php

@@ -51,6 +51,7 @@ footer {
 	text-align: center;
 	font-size: 14px;
 }
+
 .button.button-secondary {
 	background: #FFF;
 	border: 2px solid #e1e1e1;
@@ -170,15 +171,17 @@ ul li a {
 .entry p {
 	margin-bottom: 40px;
 }
-.edit {
+.edit,
+.delete {
 	padding-bottom: 80px;
 	text-align: center;
 	margin: 0 auto;
 }
-.edit a {
-	font-weight: 400;
-	text-transform: uppercase;
-	font-size: 18px;
+.edit a,
+.delete a {
+	/* font-weight: 400;
+	text-transform: uppercase; 
+	font-size: 18px; */
 }
 
 
