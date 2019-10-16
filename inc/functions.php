@@ -146,6 +146,39 @@ function delete_entry($entry_id) {
 
 }
 
+function delete_tag($tag_id) {
+
+  include('connection.php');
+  $entries_sql = $tags_sql = "";
+  try {
+    $tags_sql = "DELETE FROM tags WHERE tag_id = ?";
+    $tags_results = $db->prepare($tags_sql);
+
+    $entries_sql = "DELETE FROM entries_to_tags WHERE tag_id = ?";
+    $entries_results = $db->prepare($entries_sql);
+
+    $db->beginTransaction();
+
+    $tags_results->bindParam(1,$tag_id,PDO::PARAM_INT);
+    $tags_results->execute();
+
+    $entries_results->bindParam(1,$tag_id,PDO::PARAM_INT);
+    $entries_results->execute();
+
+    $db->commit();
+
+
+
+  } catch (Exception $e) {
+    $db->rollBack();
+    echo "Bad query: " . $e->getMessage();
+    exit;
+  }
+
+  return TRUE;
+
+}
+
 //thanks to info on stackoverflow on how to commit 2 query in 1 transaction
 //link: https://stackoverflow.com/questions/6598215/prepare-multiple-statments-before-executing-them-in-a-transaction
 function link_tags($entry_id,$tags) {
