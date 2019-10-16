@@ -1,42 +1,75 @@
 <?php
 include('inc/functions.php');
-$id=$title=$date=$time_spent=$time_unit=$learned=$resources="";
+$entry_id=$title=$date=$time_spent=$time_unit=$learned=$resources=$error_message="";
+$operation="Add";
+$tags = array();
 
-if(!empty($_GET['id'])) {
-  $id = trim(filter_input(INPUT_GET,'id',FILTER_SANITIZE_NUMBER_INT));
+if(!empty($_GET['entry_id'])) {
+  $entry_id = trim(filter_input(INPUT_GET,'entry_id',FILTER_SANITIZE_NUMBER_INT));
 
-  if(!empty($id))
+  if(!empty($entry_id))
   {
-    list($id,$title,$date,$time_spent,$time_unit,$learned,$resources) = get_entries($id);
+    list($entry_id,$title,$date,$time_spent,$time_unit,$learned,$resources) = get_entries($entry_id,null);
+    //make sure the tags array only contains tag_id's
+    foreach(get_tags(null,$entry_id) as $key=>$value) {
+      $tags[$key] = $value['tag_id'];
+    }
+    $operation="Update";
   }
 }
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $id = trim(filter_input(INPUT_POST,'id',FILTER_SANITIZE_NUMBER_INT));
+  $entry_id = trim(filter_input(INPUT_POST,'entry_id',FILTER_SANITIZE_NUMBER_INT));
+
+  if(!empty($entry_id)) {
+    $operation="Update";
+  }
+
   $title = trim(filter_input(INPUT_POST,'title',FILTER_SANITIZE_STRING));
   $date = trim(filter_input(INPUT_POST,'date',FILTER_SANITIZE_STRING));
-  $time_spent = trim(filter_input(INPUT_POST,'time_spent',FILTER_SANITIZE_NUMBER_INT));
+  $time_spent = trim(filter_input(INPUT_POST,'time_spent',FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION));
   $time_unit = trim(filter_input(INPUT_POST,'time_unit',FILTER_SANITIZE_STRING));
   $learned = trim(filter_input(INPUT_POST,'learned',FILTER_SANITIZE_STRING));
   $resources = trim(filter_input(INPUT_POST,'resources',FILTER_SANITIZE_STRING));
+  $tags = filter_input(INPUT_POST,'tags',FILTER_VALIDATE_INT,FILTER_REQUIRE_ARRAY);
 
   //date format from form is yyyy-mm-dd
   $datearray = explode("-",$date);
 
   if(empty($title) || empty($date) || empty($time_spent) || empty($time_unit)) {
-   $error_message = 'Please fill in the required fields: Title, Date and Time Spent';
+   $error_message .= 'Please fill in the required fields: Title, Date and Time Spent' . "<br>";
   }
   //checkdate expects 1 month, 2 day, 3 year
   elseif(!checkdate($datearray[1],$datearray[2],$datearray[0])) {
-    $error_message = 'Invalid date';
+    $error_message .= 'Invalid date' . "<br>";
   }
   else {
-    if(add_or_edit_entry($title,$date,$time_spent,$time_unit,$learned,$resources,$id)) {
-      header('location: index.php');
-      exit;
+    //add or update the entry
+    //if successfully, then continue to link tags
+    //if not succesfully, show error
+    if(add_or_edit_entry($title,$date,$time_spent,$time_unit,$learned,$resources,$entry_id)) {
+      //only link tags to entry if tags are selected
+      //if(is_array($tags) && count($tags) > 0) {
+        //link selected tags to entry
+        //if succesfully, continue to main page
+        //if not succesfully, continue to main page with error message
+        if(link_tags($entry_id,$tags)) {
+          echo "OK";//header('location: index.php');
+          //exit;
+        }
+        else {
+          echo "NOK";
+          $location = 'location: index.php?msg=Entry+';
+          if ($operation == "Add") $location .= $operation . "e";
+          $location .= "d+but+Tags+not+Updated";
+          //header($location);
+          //exit;
+        }
+      //}
+
     }
     else {
-      $error_message = "Could not add entry";
+      $error_message .= "Could not add entry" . "<br>";
     }
   }
 }
@@ -46,12 +79,7 @@ include('inc/header.php');
 ?>
 
 <div class="edit-entry">
-    <h2><?php
-            if (!empty($id)) {
-              echo "Update";
-            } else {
-              echo "Add";
-            }?> Entry</h2>
+    <h2><?php echo $operation; ?> Entry</h2>
     <form method="post" action="add_or_edit.php">
         <label for="title">Title</label>
         <input id="title" type="text" name="title" value="<?php echo $title; ?>"><br>
@@ -70,11 +98,40 @@ include('inc/header.php');
         <textarea id="learned" rows="5" name="learned"><?php echo $learned; ?></textarea>
         <label for="resources">Resources to Remember</label>
         <textarea id="resources" rows="5" name="resources"><?php echo $resources; ?></textarea>
+
+          <?php
+          if($items = get_tags(null,null)) {
+
+            echo "<fieldset>\n";
+            echo "<legend>Tags:</legend>\n";
+
+            foreach($items as $item) {
+
+              echo "<input type=\"checkbox\" id=\"tag_".$item['tag_id']."\" name=\"tags[]\" value=\"".$item['tag_id'] ."\"";
+
+              if(is_array($tags)) {
+                if(in_array($item['tag_id'],$tags)) {
+                  echo " CHECKED";
+                }
+              }
+              echo " />\n";
+              echo "<label class='check_label' for='tag_".$item['tag_id']."'>".$item['title']."</label><br>\n";
+
+            }
+
+            echo "</fieldset><br>\n";
+
+
+          }
+          ?>
+
+
         <?php
-          if(!empty($id)) {
-            echo "<input type=\"hidden\" name=\"id\" value=\"".$id."\">";
+          if(!empty($entry_id)) {
+            echo "<input type=\"hidden\" name=\"entry_id\" value=\"".$entry_id."\">";
           }
         ?>
+
         <input type="submit" value="Publish Entry" class="button">
         <a href="index.php" class="button button-secondary">Cancel</a>
     </form>

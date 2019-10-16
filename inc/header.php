@@ -1,6 +1,6 @@
 <?php
 if(isset($_GET['msg'])) {
-  $error_message = trim(filter_input(INPUT_GET,'msg',FILTER_SANITIZE_STRING));
+  $error_message .= trim(filter_input(INPUT_GET,'msg',FILTER_SANITIZE_STRING)) . "<br>";
 }
 ?>
 
@@ -27,7 +27,11 @@ if(isset($_GET['msg'])) {
         </header>
         <section>
             <div class="container">
-              <?php if(!empty($error_message)) {
+              <?php
+              if(!empty($page_title)) {
+                echo "<h1>$page_title</h1>";
+              }
+              if(!empty($error_message)) {
                 echo "<p class='message'>$error_message</p>";
               }
                ?>
