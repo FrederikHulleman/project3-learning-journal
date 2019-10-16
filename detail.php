@@ -1,6 +1,6 @@
 <?php
 include('inc/functions.php');
-$id=$title=$date=$time_spent=$learned=$resources="";
+$id=$title=$date=$time_spent=$time_unit=$learned=$resources="";
 
 if(isset($_POST['delete'])) {
   if(delete_entry(filter_input(INPUT_POST,'delete',FILTER_SANITIZE_NUMBER_INT))) {
@@ -19,7 +19,7 @@ if(!empty($_GET['id'])) {
 
   if(!empty($id))
   {
-    list($id,$title,$date,$time_spent,$learned,$resources) = get_entries($id);
+    list($id,$title,$date,$time_spent,$time_unit,$learned,$resources) = get_entries($id);
   }
 }
 
@@ -36,7 +36,7 @@ include('inc/header.php');
         <time datetime="<?php echo $date; ?>"><?php echo date("F j, Y",strtotime($date)); ?></time>
         <div class="entry">
             <h3>Time Spent: </h3>
-            <p><?php echo $time_spent; ?></p>
+            <p><?php echo "$time_spent $time_unit"; ?></p>
         </div>
         <?php
         if(!empty($learned)) {

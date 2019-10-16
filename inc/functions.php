@@ -1,5 +1,18 @@
 <?php
 
+function get_tags() {
+  include('connection.php');
+  try {
+    $results = $db->query("SELECT * FROM tags");
+    $tags = $results->fetchAll(PDO::FETCH_ASSOC);
+  } catch (Exception $e) {
+      echo "Bad query: " . $e->getMessage();
+      exit;
+  }
+
+  return $tags;
+}
+
 function get_entries($id = null) {
   include('connection.php');
   $sql = $where = $order = "";
@@ -30,26 +43,27 @@ function get_entries($id = null) {
 
 }
 
-function add_or_edit_entry($title,$date,$time_spent,$learned,$resources,$id = null) {
+function add_or_edit_entry($title,$date,$time_spent,$time_unit,$learned,$resources,$id = null) {
   include('connection.php');
   $sql = "";
 
   try {
     if(!empty($id))  {
-      $sql = "UPDATE entries SET title = ?, date = ?, time_spent = ?, learned = ?, resources = ? WHERE id = ?";
+      $sql = "UPDATE entries SET title = ?, date = ?, time_spent = ?, time_unit = ?,learned = ?, resources = ? WHERE id = ?";
     }
     else {
-      $sql = "INSERT INTO entries(title,date,time_spent,learned,resources) VALUES (?,?,?,?,?)";
+      $sql = "INSERT INTO entries(title,date,time_spent,time_unit,learned,resources) VALUES (?,?,?,?,?,?)";
     }
 
     $results = $db->prepare($sql);
     $results->bindParam(1,$title,PDO::PARAM_STR);
     $results->bindParam(2,$date,PDO::PARAM_STR);
-    $results->bindParam(3,$time_spent,PDO::PARAM_STR);
-    $results->bindParam(4,$learned,PDO::PARAM_STR);
-    $results->bindParam(5,$resources,PDO::PARAM_STR);
+    $results->bindParam(3,$time_spent,PDO::PARAM_INT);
+    $results->bindParam(4,$time_unit,PDO::PARAM_STR);
+    $results->bindParam(5,$learned,PDO::PARAM_STR);
+    $results->bindParam(6,$resources,PDO::PARAM_STR);
     if(!empty($id))  {
-      $results->bindParam(6,$id,PDO::PARAM_INT);
+      $results->bindParam(7,$id,PDO::PARAM_INT);
     }
     $results->execute();
 
