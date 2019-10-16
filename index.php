@@ -1,6 +1,7 @@
 <?php
 include('inc/functions.php');
 $tag_id = $error_message = null;
+$page_title = "All available entries";
 
 if(isset($_POST['delete'])) {
   if(delete_entry(filter_input(INPUT_POST,'delete',FILTER_SANITIZE_NUMBER_INT))) {
@@ -26,7 +27,6 @@ if(!empty($_GET['tag_id'])) {
 
 if(!($entries = get_entries(null,$tag_id))) {
   $error_message .= "No journal entries available.<br>";
-
 }
 
 include('inc/header.php');

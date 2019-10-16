@@ -48,24 +48,22 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     //if successfully, then continue to link tags
     //if not succesfully, show error
     if(add_or_edit_entry($title,$date,$time_spent,$time_unit,$learned,$resources,$entry_id)) {
-      //only link tags to entry if tags are selected
-      //if(is_array($tags) && count($tags) > 0) {
-        //link selected tags to entry
-        //if succesfully, continue to main page
-        //if not succesfully, continue to main page with error message
-        if(link_tags($entry_id,$tags)) {
-          echo "OK";//header('location: index.php');
-          //exit;
-        }
-        else {
-          echo "NOK";
-          $location = 'location: index.php?msg=Entry+';
-          if ($operation == "Add") $location .= $operation . "e";
-          $location .= "d+but+Tags+not+Updated";
-          //header($location);
-          //exit;
-        }
-      //}
+
+      //link selected tags to entry
+      //if succesfully, continue to main page
+      //if not succesfully, continue to main page with error message
+      if(link_tags($entry_id,$tags)) {
+        header('location: index.php');
+        exit;
+      }
+      else {
+        $location = 'location: index.php?msg=Entry+';
+        if ($operation == "Add") $location .= $operation . "e";
+        $location .= "d+but+Tags+not+Updated";
+        header($location);
+        exit;
+      }
+
 
     }
     else {

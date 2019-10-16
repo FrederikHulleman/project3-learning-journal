@@ -248,3 +248,7 @@ input[type=submit] {
 .check_label {
 	display: inline-block;
 }
+
+.tag_name {
+	display: inline-block;
+}
