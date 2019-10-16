@@ -116,24 +116,33 @@ function add_or_edit_entry($title,$date,$time_spent,$time_unit,$learned,$resourc
 function delete_entry($entry_id) {
 
   include('connection.php');
-  $sql = "";
+  $entries_sql = $tags_sql = "";
   try {
-    $sql = "DELETE FROM entries WHERE entry_id = ?";
+    $entries_sql = "DELETE FROM entries WHERE entry_id = ?";
+    $entries_results = $db->prepare($entries_sql);
 
-    $results = $db->prepare($sql);
-    $results->bindParam(1,$entry_id,PDO::PARAM_INT);
-    $results->execute();
+    $tags_sql = "DELETE FROM entries_to_tags WHERE entry_id = ?";
+    $tags_results = $db->prepare($tags_sql);
+
+    $db->beginTransaction();
+
+    $entries_results->bindParam(1,$entry_id,PDO::PARAM_INT);
+    $entries_results->execute();
+
+    $tags_results->bindParam(1,$entry_id,PDO::PARAM_INT);
+    $tags_results->execute();
+
+    $db->commit();
+
+
 
   } catch (Exception $e) {
+    $db->rollBack();
     echo "Bad query: " . $e->getMessage();
     exit;
   }
-  if($results->rowCount() > 0) {
-    return TRUE;
-  }
-  else {
-    return FALSE;
-  }
+
+  return TRUE;
 
 }
 
