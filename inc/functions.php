@@ -179,19 +179,33 @@ function delete_tag($tag_id) {
 
 }
 
-function add_or_update_tag($tag_id,$title) {
+function add_or_update_tag($title,$tag_id=null) {
 
   include('connection.php');
   $sql = "";
   try {
-    if
-    $sql = "UPDATE tags SET title = ? WHERE tag_id = ? AND ? NOT IN (SELECT title FROM tags WHERE NOT tag_id = ?)";
-    $results = $db->prepare($sql);
 
-    $results->bindParam(1,$title,PDO::PARAM_STR);
-    $results->bindParam(2,$tag_id,PDO::PARAM_INT);
-    $results->bindParam(3,$title,PDO::PARAM_STR);
-    $results->bindParam(4,$tag_id,PDO::PARAM_INT);
+    if(!empty($tag_id)) {
+      $sql = "UPDATE tags SET title = ? WHERE tag_id = ? AND NOT ? IN (SELECT title FROM tags WHERE NOT tag_id = ?)";
+
+      $results = $db->prepare($sql);
+
+      $results->bindParam(1,$title,PDO::PARAM_STR);
+      $results->bindParam(2,$tag_id,PDO::PARAM_INT);
+      $results->bindParam(3,$title,PDO::PARAM_STR);
+      $results->bindParam(4,$tag_id,PDO::PARAM_INT);
+    }
+    else {
+      //thanks to https://stackoverflow.com/questions/267804/sql-server-how-to-insert-a-record-and-make-sure-it-is-unique
+      $sql = "INSERT INTO tags (title)
+                SELECT ?
+                WHERE NOT EXISTS (SELECT 1 FROM tags WHERE title = ?)";
+
+      $results = $db->prepare($sql);
+
+      $results->bindParam(1,$title,PDO::PARAM_STR);
+      $results->bindParam(2,$title,PDO::PARAM_STR);
+    }
     $results->execute();
 
   } catch (Exception $e) {
