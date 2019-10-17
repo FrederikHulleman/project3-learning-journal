@@ -22,6 +22,8 @@ if(isset($_GET['msg'])) {
                 <div class="site-header">
                     <a class="logo" href="index.php"><i class="material-icons">library_books</i></a>
                     <a class="button icon-right" href="add_or_edit.php"><span>New Entry</span> <i class="material-icons">add</i></a>
+                    &nbsp;&nbsp;
+                    <a class="button icon-right" href="tags.php"><span>Edit Tags</span> <i class="material-icons">add</i></a>
                 </div>
             </div>
         </header>

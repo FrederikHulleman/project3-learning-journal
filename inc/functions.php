@@ -179,6 +179,35 @@ function delete_tag($tag_id) {
 
 }
 
+function add_or_update_tag($tag_id,$title) {
+
+  include('connection.php');
+  $sql = "";
+  try {
+    if
+    $sql = "UPDATE tags SET title = ? WHERE tag_id = ? AND ? NOT IN (SELECT title FROM tags WHERE NOT tag_id = ?)";
+    $results = $db->prepare($sql);
+
+    $results->bindParam(1,$title,PDO::PARAM_STR);
+    $results->bindParam(2,$tag_id,PDO::PARAM_INT);
+    $results->bindParam(3,$title,PDO::PARAM_STR);
+    $results->bindParam(4,$tag_id,PDO::PARAM_INT);
+    $results->execute();
+
+  } catch (Exception $e) {
+    echo "Bad query: " . $e->getMessage();
+    exit;
+  }
+
+  if($results->rowCount() > 0) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+
+}
+
 //thanks to info on stackoverflow on how to commit 2 query in 1 transaction
 //link: https://stackoverflow.com/questions/6598215/prepare-multiple-statments-before-executing-them-in-a-transaction
 function link_tags($entry_id,$tags) {

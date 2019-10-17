@@ -60,6 +60,7 @@ footer {
 .button.icon-right {
 	padding-right: 30px;
 	top: -10px;
+	margin-left: 3px;
 }
 .button.icon-left {
 	padding-left: 30px;
@@ -241,8 +242,9 @@ input[type=submit] {
 }
 
 #time_spent,
-#time_unit {
-	width: calc(25% - 32px);
+#time_unit,
+#tag_title {
+	width: calc(20% - 32px);
 }
 
 .check_label {
@@ -251,4 +253,6 @@ input[type=submit] {
 
 .tag_name {
 	display: inline-block;
+	width: 20%;
+
 }
