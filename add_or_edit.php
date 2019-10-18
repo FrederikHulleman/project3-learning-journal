@@ -4,6 +4,7 @@ $entry_id=$title=$date=$time_spent=$time_unit=$learned=$resources=$error_message
 $operation="Add";
 $tags = array();
 
+//---------------- in case the user wants to edit one specific entry -----------------
 if(!empty($_GET['entry_id'])) {
   $entry_id = trim(filter_input(INPUT_GET,'entry_id',FILTER_SANITIZE_NUMBER_INT));
 
@@ -18,6 +19,7 @@ if(!empty($_GET['entry_id'])) {
   }
 }
 
+//---------------- in case the user submitted the form  -----------------
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
   $entry_id = trim(filter_input(INPUT_POST,'entry_id',FILTER_SANITIZE_NUMBER_INT));
 
@@ -45,13 +47,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
   else {
     //add or update the entry
-    //if successfully, then continue to link tags
+    //if successfully, then continue to link tags, based on the returned entry_id from add_or_edit_entry
     //if not succesfully, show error
     if($entry_id = add_or_edit_entry($title,$date,$time_spent,$time_unit,$learned,$resources,$entry_id)) {
 
       //link selected tags to entry
       //if succesfully, continue to main page
-      //if not succesfully, continue to main page with error message
+      //if not succesfully, continue to main page with error message, so the user can link tags later to the created entry
       if(link_tags($entry_id,$tags)) {
         header('location: index.php');
         exit;
@@ -75,7 +77,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 $page_title = "$operation Entry";
 include('inc/header.php');
 ?>
-
+<!-- Building  up the form -->
 <div class="edit-entry">
 
     <form method="post" action="add_or_edit.php">
@@ -85,6 +87,7 @@ include('inc/header.php');
         <input id="date" type="date" name="date" value="<?php echo $date; ?>"><br>
         <label for="time_spent"> Time Spent & Unit <i>(minutes, hours, days, weeks)</i></label>
         <input id="time_spent" type="text" name="time_spent" value="<?php echo $time_spent; ?>">
+        <!-- new select for time units -->
         <select id="time_unit" name="time_unit">
           <option value="minutes" <?php if($time_unit == "minutes") echo " SELECTED";?>>Minutes</option>
           <option value="hours" <?php if($time_unit == "hours") echo " SELECTED";?>>Hours</option>
@@ -98,6 +101,7 @@ include('inc/header.php');
         <textarea id="resources" rows="5" name="resources"><?php echo $resources; ?></textarea>
 
           <?php
+          //show available tags as checkboxes 
           if($items = get_tags(null,null)) {
 
             echo "<fieldset>\n";

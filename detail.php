@@ -2,6 +2,7 @@
 include('inc/functions.php');
 $entry_id=$title=$date=$time_spent=$time_unit=$learned=$resources="";
 
+//---------------- in case the user wants to delete one specific entry -----------------
 if(isset($_POST['delete'])) {
   if(delete_entry(filter_input(INPUT_POST,'delete',FILTER_SANITIZE_NUMBER_INT))) {
     header('location: index.php?msg=Entry+Deleted');
@@ -14,6 +15,7 @@ if(isset($_POST['delete'])) {
 
 }
 
+//---------------- in case the user wants to view one specific entry -----------------
 if(!empty($_GET['entry_id'])) {
   $entry_id = trim(filter_input(INPUT_GET,'entry_id',FILTER_SANITIZE_NUMBER_INT));
 
@@ -23,6 +25,7 @@ if(!empty($_GET['entry_id'])) {
   }
 }
 
+//---------------- in case the entry_id could not be found -----------------
 if(empty($entry_id)) {
   header('location: index.php?msg=No+journal+could+be+selected');
   exit;
@@ -35,6 +38,7 @@ include('inc/header.php');
         <h1><?php echo $title; ?></h1>
         <time datetime="<?php echo $date; ?>"><?php echo date("F j, Y",strtotime($date)); ?></time>
         <?php
+        //retrieve & display tags
           if($tags = get_tags(null,$entry_id)) {
                 echo "<p class='tags'>\n";
 

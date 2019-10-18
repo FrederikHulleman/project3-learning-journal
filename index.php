@@ -3,6 +3,7 @@ include('inc/functions.php');
 $tag_id = $error_message = null;
 $page_title = "All entries";
 
+//---------------- in case the user wants to delete one specific entry -----------------
 if(isset($_POST['delete'])) {
   if(delete_entry(filter_input(INPUT_POST,'delete',FILTER_SANITIZE_NUMBER_INT))) {
     header('location: index.php?msg=Entry+Deleted');
@@ -15,6 +16,7 @@ if(isset($_POST['delete'])) {
 
 }
 
+//---------------- in case the user wants to view entries with 1 specific tag -----------------
 if(!empty($_GET['tag_id'])) {
   $tag_id = trim(filter_input(INPUT_GET,'tag_id',FILTER_SANITIZE_NUMBER_INT));
   if(empty($tag_id) || !(list($tag_id,$title) = get_tags($tag_id,null))) {
@@ -25,6 +27,7 @@ if(!empty($_GET['tag_id'])) {
   }
 }
 
+//---------------- retrieve entries -----------------
 if(!($entries = get_entries(null,$tag_id))) {
   $error_message .= "No journal entries available.<br>";
 }
@@ -38,6 +41,8 @@ include('inc/header.php');
       echo "<article>\n";
       echo "<h2><a href='detail.php?entry_id=".$entry['entry_id']."'>".$entry['title']."</a></h2>\n";
       echo "<time datetime='".$entry['date']."'>".date("F j, Y",strtotime($entry['date']))."</time><br>\n";
+
+      //retrieve and display tags, which belongs to entry
       if($tags = get_tags(null,$entry['entry_id'])) {
         echo "<p class='tags'>\n";
 

@@ -1,4 +1,8 @@
 <?php
+//flexible function to retrieve tags, 3 possibilities:
+//1. all tags: call function without $tag_id & $entry_id
+//2. all tags per entry: call function with $entry_id, without $tag_id
+//3. retrieve title for 1 tag_id: call function with tag_id, without entry_id
 function get_tags($tag_id = null,$entry_id = null) {
   include('connection.php');
   $sql = $where = $order = "";
@@ -6,8 +10,7 @@ function get_tags($tag_id = null,$entry_id = null) {
     $sql = "SELECT tags.* FROM tags";
     if (!empty($entry_id)) {
       $where = " JOIN entries_to_tags ON entries_to_tags.tag_id = tags.tag_id
-              JOIN entries ON entries_to_tags.entry_id = entries.entry_id
-              WHERE entries.entry_id = ?";
+              WHERE entries_to_tags.entry_id = ?";
     }
     elseif (!empty($tag_id)) {
       $where = " WHERE tags.tag_id = ?";
@@ -36,6 +39,10 @@ function get_tags($tag_id = null,$entry_id = null) {
   return $tags;
 }
 
+//flexible function to retrieve entries, 3 possibilities:
+//1. all entries: call function without $tag_id & $entry_id
+//2. all entries per tag: call function with $tag_id, without $enty_id
+//3. retrieve details for 1 entry_id: call function with entry_id, without tag_id
 function get_entries($entry_id = null,$tag_id = null) {
   include('connection.php');
   $sql = $where = $order = "";
@@ -44,8 +51,7 @@ function get_entries($entry_id = null,$tag_id = null) {
 
     if (!empty($tag_id)) {
       $where = " JOIN entries_to_tags ON entries.entry_id = entries_to_tags.entry_id
-                JOIN tags ON entries_to_tags.tag_id = tags.tag_id
-                WHERE tags.tag_id = ?
+                WHERE entries_to_tags.tag_id = ?
         ";
     }
     elseif (!empty($entry_id)) {
@@ -77,6 +83,10 @@ function get_entries($entry_id = null,$tag_id = null) {
 
 }
 
+//one function to either add or update an entry;
+//for adding: call function without $entry_id;
+//for updating: call function with $entry_id
+//if succesfull, this function returns the (new) entry_id, so it can be used to link tags
 function add_or_edit_entry($title,$date,$time_spent,$time_unit,$learned,$resources,$entry_id = null) {
   include('connection.php');
   $sql = "";
@@ -109,7 +119,6 @@ function add_or_edit_entry($title,$date,$time_spent,$time_unit,$learned,$resourc
     if(empty($entry_id))  {
       $entry_id = $db->lastInsertId();
     }
-
     return $entry_id;
   }
   else {
@@ -117,6 +126,10 @@ function add_or_edit_entry($title,$date,$time_spent,$time_unit,$learned,$resourc
   }
 }
 
+//function to delete one entry_id; it also deletes the references to tags for that specific entry; tags are not impacted
+//because 2 queries are called on 2 different tables, I implemented this within a transaction and commit block
+//thanks to info on stackoverflow on how to commit 2 query in 1 transaction
+//link: https://stackoverflow.com/questions/6598215/prepare-multiple-statments-before-executing-them-in-a-transaction
 function delete_entry($entry_id) {
 
   include('connection.php');
@@ -138,8 +151,6 @@ function delete_entry($entry_id) {
 
     $db->commit();
 
-
-
   } catch (Exception $e) {
     $db->rollBack();
     echo "Bad query: " . $e->getMessage();
@@ -150,6 +161,10 @@ function delete_entry($entry_id) {
 
 }
 
+//function to delete one tag_id; it also deletes the references to entries for that specific tag; entries are not impacted
+//because 2 queries are called on 2 different tables, I implemented this within a transaction and commit block
+//thanks to info on stackoverflow on how to commit 2 query in 1 transaction
+//link: https://stackoverflow.com/questions/6598215/prepare-multiple-statments-before-executing-them-in-a-transaction
 function delete_tag($tag_id) {
 
   include('connection.php');
@@ -171,8 +186,6 @@ function delete_tag($tag_id) {
 
     $db->commit();
 
-
-
   } catch (Exception $e) {
     $db->rollBack();
     echo "Bad query: " . $e->getMessage();
@@ -180,9 +193,11 @@ function delete_tag($tag_id) {
   }
 
   return TRUE;
-
 }
 
+//one function to either add or update a tag;
+//for adding: call function without tag_id;
+//for updating: call function with tag_id
 function add_or_update_tag($title,$tag_id=null) {
 
   include('connection.php');
@@ -190,6 +205,7 @@ function add_or_update_tag($title,$tag_id=null) {
   try {
 
     if(!empty($tag_id)) {
+      //make sure the chosen tag title doesn't exist
       $sql = "UPDATE tags SET title = ? WHERE tag_id = ? AND NOT ? IN (SELECT title FROM tags WHERE NOT tag_id = ?)";
 
       $results = $db->prepare($sql);
@@ -200,6 +216,7 @@ function add_or_update_tag($title,$tag_id=null) {
       $results->bindParam(4,$tag_id,PDO::PARAM_INT);
     }
     else {
+      //make sure the chosen tag title doesn't exist
       //thanks to https://stackoverflow.com/questions/267804/sql-server-how-to-insert-a-record-and-make-sure-it-is-unique
       $sql = "INSERT INTO tags (title)
                 SELECT ?
@@ -221,11 +238,14 @@ function add_or_update_tag($title,$tag_id=null) {
     return TRUE;
   }
   else {
+    //in case the title from input already existed in the tag table
     return FALSE;
   }
 
 }
 
+//function to link the tags if an entry is added or updated
+//for 1 single entry_id and an array of selected tags
 //thanks to info on stackoverflow on how to commit 2 query in 1 transaction
 //link: https://stackoverflow.com/questions/6598215/prepare-multiple-statments-before-executing-them-in-a-transaction
 function link_tags($entry_id,$tags) {
@@ -234,15 +254,15 @@ function link_tags($entry_id,$tags) {
   $delete_sql = $insert_sql = "";
 
   try {
-    //if the user deselected tags, they should be removed
     //i choose to remove everything and insert all selected tags later
     $delete_sql = "DELETE FROM entries_to_tags WHERE entry_id = ?";
     $delete_results = $db->prepare($delete_sql);
 
+    //if the user didn't select tags, then only the delete part has to run of this function
     if(is_array($tags) && count($tags) > 0) {
 
       $insert_sql = "INSERT INTO entries_to_tags (entry_id,tag_id) VALUES (?,?)";
-
+      //include enough question marks inserts for all tag-entry couples
       for ($i=1; $i < count($tags); $i++) {
         $insert_sql .= ", (?,?)";
       }
@@ -257,17 +277,16 @@ function link_tags($entry_id,$tags) {
     $delete_results->bindParam(1,$entry_id,PDO::PARAM_INT);
     $delete_results->execute();
 
-    if(!empty($insert_sql)) {
+    //if the user didn't select tags, then only the delete part has to run of this function
+    if(is_array($tags) && count($tags) > 0) {
 
       for ($i=0; $i < count($tags); $i++) {
+        //calculate which question mark numbers should be inserted
         //1st tag: 1 & 2
         //2nd tag: 3 & 4
         //3rd tag: 5 & 6
-
         $second_param = ($i + 1) * 2;
         $first_param = $second_param  - 1;
-
-        //echo "1st: $first_param and 2st: $second_param <br>";
 
         $insert_results->bindParam($first_param,$entry_id,PDO::PARAM_INT);
         $insert_results->bindParam($second_param,$tags[$i],PDO::PARAM_INT);

@@ -1,4 +1,5 @@
 <?php
+//retrieve message from URL
 if(isset($_GET['msg'])) {
   $error_message .= trim(filter_input(INPUT_GET,'msg',FILTER_SANITIZE_STRING)) . "<br>";
 }
@@ -29,10 +30,13 @@ if(isset($_GET['msg'])) {
         </header>
         <section>
             <div class="container">
+
               <?php
+              //display page title
               if(!empty($page_title)) {
                 echo "<h2 class='page_title'>$page_title</h2>";
               }
+              //display error message
               if(!empty($error_message)) {
                 echo "<p class='message'>$error_message</p>";
               }
