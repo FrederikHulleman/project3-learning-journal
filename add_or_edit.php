@@ -47,7 +47,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     //add or update the entry
     //if successfully, then continue to link tags
     //if not succesfully, show error
-    if(add_or_edit_entry($title,$date,$time_spent,$time_unit,$learned,$resources,$entry_id)) {
+    if($entry_id = add_or_edit_entry($title,$date,$time_spent,$time_unit,$learned,$resources,$entry_id)) {
 
       //link selected tags to entry
       //if succesfully, continue to main page

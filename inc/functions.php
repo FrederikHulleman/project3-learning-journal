@@ -106,7 +106,11 @@ function add_or_edit_entry($title,$date,$time_spent,$time_unit,$learned,$resourc
     exit;
   }
   if($results->rowCount() > 0) {
-    return TRUE;
+    if(empty($entry_id))  {
+      $entry_id = $db->lastInsertId();
+    }
+
+    return $entry_id;
   }
   else {
     return FALSE;
@@ -263,7 +267,7 @@ function link_tags($entry_id,$tags) {
         $second_param = ($i + 1) * 2;
         $first_param = $second_param  - 1;
 
-        echo "1st: $first_param and 2st: $second_param <br>";
+        //echo "1st: $first_param and 2st: $second_param <br>";
 
         $insert_results->bindParam($first_param,$entry_id,PDO::PARAM_INT);
         $insert_results->bindParam($second_param,$tags[$i],PDO::PARAM_INT);
