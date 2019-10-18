@@ -31,7 +31,7 @@ if(isset($_GET['msg'])) {
             <div class="container">
               <?php
               if(!empty($page_title)) {
-                echo "<h1>$page_title</h1>";
+                echo "<h2 class='page_title'>$page_title</h2>";
               }
               if(!empty($error_message)) {
                 echo "<p class='message'>$error_message</p>";

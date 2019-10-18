@@ -72,12 +72,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 }
 
-
+$page_title = "$operation Entry";
 include('inc/header.php');
 ?>
 
 <div class="edit-entry">
-    <h2><?php echo $operation; ?> Entry</h2>
+
     <form method="post" action="add_or_edit.php">
         <label for="title">Title</label>
         <input id="title" type="text" name="title" value="<?php echo $title; ?>"><br>

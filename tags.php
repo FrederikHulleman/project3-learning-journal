@@ -1,7 +1,7 @@
 <?php
 include('inc/functions.php');
 $tag_id = $title = $error_message = "";
-$page_title = "Manage tags";
+$page_title = "Edit tags";
 $tags = array();
 
 //variables to control the 3 components on the screen
