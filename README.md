@@ -8,9 +8,9 @@
 ## What the app does
 #### In this blog app you will experience the following functionalities:
 1. Viewing all blog posts, incl. their tags
-
+<kbd>
 ![Image of Main Screen](screenshots/1-main-screen.png)
-
+</kbd>
 2. Filtering the blog posts by tag
 
 ![Image of Main Screen filtered by tag](screenshots/2-filtered-by-tag.png)
