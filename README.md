@@ -1,22 +1,51 @@
-# project3-learning-journal
-# 3rd PHP techdegree project team tree house
-#
-# Before you start
-# Download the project files. We've supplied the SQLite Database/HTML/CSS shell files for you to connect your project.
-# Convert the HTML files to PHP files and pull out the header and footer to be managed in one place.
-# Move the journal.db file into an inc directory.
-#
-# Project Instructions
-# V DONE Create a PDO connection to the SQLite (database.db) file within the inc folder.
-# Use prepared statements to add/edit/delete journal entries in the database.
-# Create “add/edit” view for the "entry" page that allows the user to add or edit journal entries with the following fields: title, date, time_spent, learned, and resources. Each journal entry should have a unique primary key.
-# Create "list" view for the "index" page. The list view contains a list of journal entries, which displays Title and Date of each Entry. The title should be hyperlinked to the detail page for each journal entry. Entries should be sorted by date. Include a link to add an entry.
-# Create "details" view with the entries displaying the journal entry with all fields: title, date, time_spent, learned, and resources. Include a link to edit the entry.
-# Add the ability to delete a journal entry.
-# Use the supplied HTML/CSS to build and style your pages.Use CSS to style headings, font colors, journal entry container colors, body colors.
-# Before you submit your project for review, make sure you can check off all of the items on the Student Project Submission Checklist. The checklist # is designed to help you make sure you’ve met the grading requirements and that your project is complete and ready to be submitted!
+# A learning journal app based on PHP, PDO, SQL and SQLite
+### PHP Team Treehouse TechDegree project #3
 
-# Extra Credit
-# Add tags table and link tags to journal entries in the database. You'll want to download a SQLite Browser to modify the database.
-# Add tags to journal entries on the listing page and allow the tags to be links to a list of entries, filtered by specific tags.
-# Add tags to the details page, with link to a list of entries, filtered by specific tags
+- [What the app does](#what-the-app-does)
+- [Tech used](#tech-used)
+- [Folder & file structure](#folder--file-structure)
+
+## What the app does
+#### In this blog app you will experience the following functionalities:
+1. Viewing all blog posts, incl. their tags
+
+![Image of Main Screen](screenshots/1-main-screen.png)
+
+2. Filtering the blog posts by tag
+
+![Image of Main Screen filtered by tag](screenshots/2-filtered_by_tag.png)
+
+3. Viewing blog details, reading its comments and adding new comments
+
+![Image Post details screen](screenshots/3-details-entry.png)
+
+4. Adding blogs, incl. their tags
+
+![Image of Add Post Screen](screenshots/4-add-entry.png)
+
+5. Editing blog details, incl. their tags
+
+![Image of Edit Post Screen](screenshots/5-edit-entry.png)
+
+6. Deleting blog posts
+
+![Image of Delete Post Screen](screenshots/6-delete-entry.png)
+
+7. Managing tags: retrieving, adding, updating & deleting tags. And when done, of course, you can start using the tags for your posts
+
+![Image of Tags Screen](screenshots/7-tags.png)
+
+## Tech used
+#### In this app the following main languages, principles and other technologies are applied:
+PHP | Exception handling | Filtering input & escaping output | PDO | SQL CRUD operations | SQLite | HTML | CSS
+
+## Folder & file structure
+#### The most important folders & files within this project:
+
+      .
+      ├── css                         # contains the css files               
+      ├── inc                         # contains the SQLite database, connection, functions, header & footer files
+      ├── add_or_edit.php             # screen for both adding & editing journal entries
+      ├── detail.php                  # screen which displays the entry details
+      ├── index.php                   # main learning journal screen with all entries
+      └── tags.php                    # screen to manage tags: add, edit & delete
