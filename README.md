@@ -7,31 +7,31 @@
 
 ## What the app does
 #### In this blog app you will experience the following functionalities:
-1. Viewing all blog posts, incl. their tags
+##### 1. Viewing all blog posts, incl. their tags
 ---
 ![Image of Main Screen](screenshots/1-main-screen.png)
 ---
-2. Filtering the blog posts by tag
+##### 2. Filtering the blog posts by tag
 ---
 ![Image of Main Screen filtered by tag](screenshots/2-filtered-by-tag.png)
 ---
-3. Viewing blog details, reading its comments and adding new comments
+##### 3. Viewing blog details, reading its comments and adding new comments
 ---
 ![Image Post details screen](screenshots/3-details-entry.png)
 ---
-4. Adding blogs, incl. their tags
+##### 4. Adding blogs, incl. their tags
 ---
 ![Image of Add Post Screen](screenshots/4-add-entry.png)
 ---
-5. Editing blog details, incl. their tags
+##### 5. Editing blog details, incl. their tags
 ---
 ![Image of Edit Post Screen](screenshots/5-edit-entry.png)
 ---
-6. Deleting blog posts
+##### 6. Deleting blog posts
 ---
 ![Image of Delete Post Screen](screenshots/6-delete-entry.png)
 ---
-7. Managing tags: retrieving, adding, updating & deleting tags. And when done, of course, you can start using the tags for your posts
+##### 7. Managing tags: retrieving, adding, updating & deleting tags. And when done, of course, you can start using the tags for your posts
 ---
 ![Image of Tags Screen](screenshots/7-tags.png)
 ---
