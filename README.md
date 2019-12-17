@@ -13,7 +13,7 @@
 
 2. Filtering the blog posts by tag
 
-![Image of Main Screen filtered by tag](screenshots/2-filtered_by_tag.png)
+![Image of Main Screen filtered by tag](screenshots/2-filtered-by-tag.png)
 
 3. Viewing blog details, reading its comments and adding new comments
 
